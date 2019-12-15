@@ -45,7 +45,7 @@ class LoginControllerValidationSpec extends Specification {
     @Unroll("{\"username\": \"#username\", \"password\": \"#password\"} is invalid payload")
     void "LoginController responds BAD_REQUEST if POJO sent to /login is invalid"(String username, String password) {
         given:
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password)
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password as String)
 
         when:
         client.toBlocking().exchange(HttpRequest.POST('/login', creds))
