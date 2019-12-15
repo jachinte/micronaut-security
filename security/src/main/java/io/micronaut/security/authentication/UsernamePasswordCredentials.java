@@ -16,10 +16,11 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.Introspected;
-
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  *
@@ -35,7 +36,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
 
     @NotBlank
     @NotNull
-    private String password;
+    private char[] password;
 
     /**
      * Empty constructor.
@@ -47,9 +48,21 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * @param username e.g. admin
      * @param password raw password
      */
-    public UsernamePasswordCredentials(String username, String password) {
+    public UsernamePasswordCredentials(final String username, final char[] password) {
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     *
+     * @param username e.g. admin
+     * @param password raw password
+     * @deprecated Use {@link #UsernamePasswordCredentials(String, char[])} instead
+     */
+    @Deprecated
+    public UsernamePasswordCredentials(String username, String password) {
+        this.username = username;
+        this.password = password != null ? password.toCharArray() : null;
     }
 
     /**
@@ -71,16 +84,36 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
     /**
      * password getter.
      * @return raw password
+     * @deprecated Use {@link #getPasswordArray()} instead
      */
+    @Deprecated
     public String getPassword() {
-        return password;
+        return this.password != null ? String.valueOf(this.password) : null;
+    }
+
+    /**
+     * password setter.
+     * @param password raw password
+     * @deprecated Use {@link #setPassword(char[])} instead
+     */
+    @Deprecated
+    public void setPassword(String password) {
+        this.password = password.toCharArray();
+    }
+
+    /**
+     * password getter.
+     * @return raw password
+     */
+    public char[] getPasswordArray() {
+        return this.password;
     }
 
     /**
      * password setter.
      * @param password raw password
      */
-    public void setPassword(String password) {
+    public void setPassword(final char[] password) {
         this.password = password;
     }
 
@@ -95,7 +128,7 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      */
     @Override
     public String getSecret() {
-        return getPassword();
+        return this.password != null ? String.valueOf(this.password) : null;
     }
 
     @Override
@@ -112,13 +145,14 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
         if (username != null ? !username.equals(that.username) : that.username != null) {
             return false;
         }
-        return password != null ? password.equals(that.password) : that.password == null;
+        return this.password != null ? Objects.deepEquals(this.password, that.password) : that.password == null;
     }
 
     @Override
     public int hashCode() {
         int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(this.password);
         return result;
     }
+
 }
