@@ -50,7 +50,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
     private String clientId;
     private String clientSecret;
     private String username;
-    private String password;
+    private char[] password;
     private String scope;
 
     /**
@@ -65,10 +65,10 @@ public class PasswordGrant implements SecureGrant, AsMap {
      */
     public PasswordGrant(AuthenticationRequest authenticationRequest, OauthClientConfiguration clientConfiguration) {
         username = authenticationRequest.getIdentity().toString();
-        password = authenticationRequest.getSecret().toString();
+        password = (char[]) authenticationRequest.getSecret();
         scope = clientConfiguration.getScopes().stream()
-                .reduce((a, b) -> a + StringUtils.SPACE + b)
-                .orElse(null);
+            .reduce((a, b) -> a + StringUtils.SPACE + b)
+            .orElse(null);
     }
 
     /**
@@ -140,18 +140,39 @@ public class PasswordGrant implements SecureGrant, AsMap {
 
     /**
      *
-     * @return An password
+     * @return A password
+     * @deprecated Use {@link #getPasswordArray()} instead
      */
+    @Deprecated
     @Nonnull
     public String getPassword() {
-        return password;
+        return String.valueOf(this.password);
     }
 
     /**
      *
-     * @param password An password
+     * @param password A password
+     * @deprecated Use {@link #setPassword(char[])} instead
      */
+    @Deprecated
     public void setPassword(@Nonnull String password) {
+        this.password = password.toCharArray();
+    }
+
+    /**
+     *
+     * @return An password
+     */
+    @Nonnull
+    public char[] getPasswordArray() {
+        return this.password;
+    }
+
+    /**
+     *
+     * @param password A password
+     */
+    public void setPassword(@Nonnull char[] password) {
         this.password = password;
     }
 
@@ -180,7 +201,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
         Map<String, String> m = new SecureGrantMap();
         m.put(KEY_GRANT_TYPE, grantType);
         m.put(KEY_USERNAME, username);
-        m.put(KEY_PASSWORD, password);
+        m.put(KEY_PASSWORD, String.valueOf(this.password));
         if (StringUtils.isNotEmpty(scope)) {
             m.put(KEY_SCOPE, scope);
         }
@@ -193,4 +214,3 @@ public class PasswordGrant implements SecureGrant, AsMap {
         return m;
     }
 }
-
