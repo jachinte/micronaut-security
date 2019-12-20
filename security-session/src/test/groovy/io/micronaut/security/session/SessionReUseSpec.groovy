@@ -3,7 +3,6 @@ package io.micronaut.security.session
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
-import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -22,10 +21,9 @@ import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.session.Session
 import io.micronaut.session.SessionStore
 import io.reactivex.Flowable
+import javax.inject.Singleton
 import org.reactivestreams.Publisher
 import spock.lang.Specification
-
-import javax.inject.Singleton
 
 class SessionReUseSpec extends Specification {
 
@@ -107,8 +105,8 @@ class SessionReUseSpec extends Specification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
         @Override
         public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                    authenticationRequest.getSecret().equals("password") ) {
+            if ( authenticationRequest.getIdentity().equals("sherlock")
+                && Arrays.equals((char[]) authenticationRequest.getSecret(), "password".toCharArray()) ) {
                 UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
                 return Flowable.just(userDetails);
             }

@@ -27,7 +27,9 @@ public interface PasswordEncoder {
     /**
      * @param rawPassword The plain text password
      * @return The result of encoding the password
+     * @deprecated Use {@link #encode(char[])} instead
      */
+    @Deprecated
     String encode(String rawPassword);
 
     /**
@@ -35,6 +37,26 @@ public interface PasswordEncoder {
      * @param rawPassword The plain text password
      * @param encodedPassword The encoded password to match against
      * @return true if the passwords match
+     * @deprecated Use {@link #matches(char[], char[])} instead
      */
+    @Deprecated
     boolean matches(String rawPassword, String encodedPassword);
+
+    /**
+     * @param rawPassword The plain text password
+     * @return The result of encoding the password
+     */
+    default char[] encode(char[] rawPassword) {
+        return this.encode(String.valueOf(rawPassword)).toCharArray();
+    }
+
+    /**
+     *
+     * @param rawPassword The plain text password
+     * @param encodedPassword The encoded password to match against
+     * @return true if the passwords match
+     */
+    default boolean matches(char[] rawPassword, char[] encodedPassword) {
+        return this.matches(String.valueOf(rawPassword), String.valueOf(encodedPassword));
+    }
 }

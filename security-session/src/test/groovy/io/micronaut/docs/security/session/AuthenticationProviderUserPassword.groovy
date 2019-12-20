@@ -31,8 +31,8 @@ import javax.inject.Singleton
 class AuthenticationProviderUserPassword implements AuthenticationProvider  {
     @Override
     Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                authenticationRequest.getSecret().equals("password") ) {
+        if ( authenticationRequest.getIdentity().equals("sherlock")
+          && Arrays.equals(authenticationRequest.getSecret() as char[], "password".toCharArray()) ) {
             return Flowable.just(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
         }
         return Flowable.just(new AuthenticationFailed())

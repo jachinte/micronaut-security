@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Introspected
-public class UsernamePasswordCredentials implements Serializable, AuthenticationRequest<String, String> {
+public class UsernamePasswordCredentials implements Serializable, AuthenticationRequest<String, char[]> {
 
     @NotBlank
     @NotNull
@@ -126,9 +126,8 @@ public class UsernamePasswordCredentials implements Serializable, Authentication
      * Returns password conforming to {@link AuthenticationRequest} blueprint.
      * @return secret string.
      */
-    @Override
-    public String getSecret() {
-        return this.password != null ? String.valueOf(this.password) : null;
+    public char[] getSecret() {
+        return this.getPasswordArray();
     }
 
     @Override
