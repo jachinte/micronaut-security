@@ -230,7 +230,7 @@ class HealthSensitivitySpec extends Specification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
+            if (authenticationRequest.identity == 'user' && String.valueOf(authenticationRequest.secret) == 'password') {
                 return Flowable.just(new UserDetails('user', []))
             }
             return Flowable.just(new AuthenticationFailed())

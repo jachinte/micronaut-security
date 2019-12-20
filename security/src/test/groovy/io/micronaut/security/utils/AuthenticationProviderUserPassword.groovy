@@ -33,7 +33,7 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
     Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+        if ( authenticationRequest.identity == 'user' && String.valueOf(authenticationRequest.secret) == 'password' ) {
             return Flowable.just(new UserDetails('user', ['ROLE_USER']))
         }
         return Flowable.just(new AuthenticationFailed())

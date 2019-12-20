@@ -168,8 +168,8 @@ class EventListenerSpec extends Specification {
         @Override
         Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
             System.out.println(authenticationRequest.identity)
-            System.out.println(authenticationRequest.secret)
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+            System.out.println(String.valueOf(authenticationRequest.secret))
+            if ( authenticationRequest.identity == 'user' && String.valueOf(authenticationRequest.secret) == 'password' ) {
                 System.out.println("returning a new user details")
                 return Flowable.just(new UserDetails('user', []))
             }

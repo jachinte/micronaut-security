@@ -22,6 +22,7 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.reactivex.Flowable;
+import java.util.Arrays;
 import org.reactivestreams.Publisher;
 
 import javax.inject.Singleton;
@@ -33,7 +34,8 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
+        if (authenticationRequest.getIdentity().equals("user")
+            && Arrays.equals((char[]) authenticationRequest.getSecret(), "password".toCharArray())) {
             return Flowable.just(new UserDetails("user", Collections.emptyList()));
         }
         return Flowable.just(new AuthenticationFailed());

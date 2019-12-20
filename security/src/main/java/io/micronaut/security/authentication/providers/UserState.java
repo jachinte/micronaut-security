@@ -32,8 +32,18 @@ public interface UserState {
     /**
      *
      * @return The encrypted password
+     * @deprecated Use {@link #getPasswordArray()} instead
      */
+    @Deprecated
     String getPassword();
+
+    /**
+     *
+     * @return The encrypted password
+     */
+    default char[] getPasswordArray() {
+        return this.getPassword().toCharArray();
+    }
 
     /**
      *

@@ -77,7 +77,7 @@ public class DelegatingAuthenticationProvider implements AuthenticationProvider 
             if (user.isPasswordExpired()) {
                 return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED));
             }
-            if (!passwordEncoder.matches(authenticationRequest.getSecret().toString(), user.getPassword())) {
+            if (!passwordEncoder.matches((char[]) authenticationRequest.getSecret(), user.getPasswordArray())) {
                 return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH));
             }
             return createSuccessfulAuthenticationResponse(authenticationRequest, user);

@@ -39,8 +39,8 @@ public class SampleAuthenticationProvider implements AuthenticationProvider {
         if (authenticationRequest.getSecret() == null) {
             return Flowable.just(new AuthenticationFailed());
         }
-        if (Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
-                authenticationRequest.getSecret().equals("elementary")) {
+        if (Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString())
+            && Arrays.equals((char[]) authenticationRequest.getSecret(), "elementary".toCharArray())) {
             return Flowable.just(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()));
         }
         return Flowable.just(new AuthenticationFailed());
